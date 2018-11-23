@@ -9,14 +9,21 @@ import seaborn as sns
 sns.set_style("whitegrid")
 sns.set_context("poster")
 
-boston=pd.read_csv('../data/train.csv')
-sns.pairplot(boston)
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn import linear_model
 
-#sns.pairplot(data=boston,hue='medv')
+X = [[0.44, 0.68], [0.99, 0.23]]
+vector = [109.85, 155.72]
+predict= [0.49, 0.18]
 
-#cols=boston.columns[:-1]
-#for col in cols:
-#    sns.lmplot(x=col,y='medv',data=boston)
-    
-#Both rm and lstat seems very correlated.
-sns.heatmap(boston.corr())
+poly = PolynomialFeatures(degree=2)
+X_ = poly.fit_transform(X)
+#predict_ = poly.fit_transform(predict)
+
+clf = linear_model.LinearRegression()
+clf.fit(X_, vector)
+print clf.predict(predict_)
+
+from sklearn.model_selection import cross_val_score
+reg=linear_model.LinearRegression()
+cv_results=cross_val_score(reg,X,y,cv=5)
