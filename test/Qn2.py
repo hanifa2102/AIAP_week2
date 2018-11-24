@@ -1,3 +1,12 @@
+import numpy as np
+import pandas as pd
+import sklearn
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, r2_score
 def plotScatter(X,fX):
     fig=plt.figure()
     ax=fig.add_subplot(111)
@@ -17,25 +26,27 @@ noise=np.random.normal(0,2,x.size)
 fx_=fx+noise
 plotScatter(x,fx_)
 
-X_train,X_test,y_train,y_test=train_test_split(x,fx_,test_size=300,random_state=42)
+X_train,X_test,y_train,y_test=train_test_split(x,fx_,test_size=100,random_state=42)
 plotScatter(X_test,y_test)
 
 lrModelsList=[]
 numOfModels=2
 for i in range(0,numOfModels):
-    index=np.random.randint(low=0,high=X_train.size,size=80)
+    index=np.random.randint(low=0,high=X_train.size,size=5)
     lr=LinearRegression()
     lr.fit(X_train[index].reshape(-1,1),y_train[index].reshape(-1,1))
     lrModelsList.append(lr)
+
     
-y_pred_ar=np.zeros((300,numOfModels))
-mse_ar=np.zeros((numOfModels,1))
+y_pred_ar=np.zeros((100,numOfModels))
+#mse_ar=np.zeros((numOfModels,1))
 i=0
-for lrModel in lrModelsList:
-    y_pred=lrModel.predict(X_test.reshape(-1,1))
-    y_pred_ar[:,i:i+1]=y_pred
-    mse_ar[i]=mean_squared_error(y_test, y_pred)
-    i=i+1
+#for lrModel in lrModelsList:
+lrModel=lrModelsList[0]
+y_pred=lrModel.predict(X_test.reshape(-1,1))
+y_pred_ar[:,i:i+1]=y_pred
+mse_ar[i]=mean_squared_error(y_test, y_pred)
+i=i+1
 
 y_true=funcX(X_test)
 y_pred_mean=y_pred_ar.mean(axis=1).reshape(-1,1)
